@@ -18,8 +18,11 @@ import wandb
 
 # Arguments
 parser = argparse.ArgumentParser()
+
+parser.add_argument("--use_wandb", type=eval, default=False, choices=[True, False])
+
 # Model arguments
-parser.add_argument('--model', type=str, default='flow', choices=['flow'])
+parser.add_argument('--model', type=str, default='flow', choices=['flow', 'gaussian'])
 parser.add_argument('--latent_dim', type=int, default=256)
 parser.add_argument('--num_steps', type=int, default=100)
 parser.add_argument('--beta_1', type=float, default=1e-4)
@@ -30,7 +33,7 @@ parser.add_argument('--truncate_std', type=float, default=2.0)
 parser.add_argument('--latent_flow_depth', type=int, default=14)
 parser.add_argument('--latent_flow_hidden_dim', type=int, default=256)
 parser.add_argument('--num_samples', type=int, default=4)
-# parser.add_argument('--sample_num_points', type=int, default=2048)
+
 parser.add_argument('--kl_weight', type=float, default=0.001)
 parser.add_argument('--residual', type=eval, default=True, choices=[True, False])
 parser.add_argument('--spectral_norm', type=eval, default=False, choices=[True, False])
@@ -57,12 +60,11 @@ parser.add_argument('--log_root', type=str, default='./logs_gen')
 parser.add_argument('--device', type=str, default='cuda')
 parser.add_argument('--max_iters', type=int, default=float('inf'))
 parser.add_argument('--val_freq', type=int, default=1000)
-parser.add_argument('--test_freq', type=int, default=30*THOUSAND)
+parser.add_argument('--test_freq', type=int, default=5*THOUSAND)
 parser.add_argument('--test_size', type=int, default=400)
 parser.add_argument('--tag', type=str, default=None)
 parser.add_argument('--sample_num_points', type=int, default=2048) #new line
 parser.add_argument('--orca_training', type=eval, default=False, choices=[True, False]) #new line
-parser.add_argument('--security_net', type=eval, default=False, choices=[True, False]) #new line
 parser.add_argument('--security_distance_value', type=float, default=0.07) #new line
 
 parser.add_argument('--orca_sampling', type=eval, default=False, choices=[True, False]) #new line
@@ -95,9 +97,10 @@ else:
     ckpt_mgr = BlackHole()
 logger.info(args)
 
-wandb_args = {'num_points': args.sample_num_points, 'model': args.model}
-wandb_name = log_dir.split('/')[-1]
-wandb.init(project="dpc-robots", name=wandb_name, config=wandb_args)
+if args.use_wandb:
+    wandb_args = {'num_points': args.sample_num_points, 'model': args.model}
+    wandb_name = log_dir.split('/')[-1]
+    wandb.init(project="dpc-robots", name=wandb_name, config=wandb_args)
 
 # Datasets and loaders
 logger.info('Loading datasets...')
@@ -127,6 +130,8 @@ train_iter = get_data_iterator(DataLoader(
 logger.info('Building model...')
 if args.model == 'flow':
     model = FlowVAE(args).to(args.device)
+elif args.model == 'gaussian':
+    model = GaussianVAE(args).to(args.device)
 else:
     raise NotImplementedError
 logger.info(repr(model))
@@ -160,7 +165,7 @@ def train(it):
 
     # Forward
     kl_weight = args.kl_weight
-    loss = model.get_loss(x, kl_weight=kl_weight, writer=writer, it=it, wandb=wandb)
+    loss = model.get_loss(x, kl_weight=kl_weight, writer=writer, it=it, wandb=args.use_wandb)
 
     # Backward and optimize
     loss.backward()
@@ -209,10 +214,6 @@ def test(it):
             gen_pcs.append(x.detach().cpu())
     gen_pcs = torch.cat(gen_pcs, dim=0)[:args.test_size, 0, :, :]
 
-    # Denormalize point clouds, all shapes have zero mean.
-    # [WARNING]: Do NOT denormalize!
-    # ref_pcs *= val_dset.stats['std']
-    # gen_pcs *= val_dset.stats['std']
 
     with torch.no_grad():
         results = compute_all_metrics(gen_pcs.to(args.device), ref_pcs.to(args.device), args.val_batch_size)
@@ -227,8 +228,9 @@ def test(it):
     
     # JSD
     writer.add_scalar('test/JSD', results['jsd'], global_step=it)
-    wandb_test_dict = {'Coverage_CD': results['lgan_cov-CD'], 'MMD_CD': results['lgan_mmd-CD'], '1NN_CD': results['1-NN-CD-acc'], 'JSD': results['jsd']}
-    wandb.log(wandb_test_dict, step=it)
+    if args.use_wandb:
+        wandb_test_dict = {'Coverage_CD': results['lgan_cov-CD'], 'MMD_CD': results['lgan_mmd-CD'], '1NN_CD': results['1-NN-CD-acc'], 'JSD': results['jsd']}
+        wandb.log(wandb_test_dict, step=it)
 
     logger.info('[Test] Coverage  | CD %.6f | EMD n/a' % (results['lgan_cov-CD'], ))
     logger.info('[Test] MinMatDis | CD %.6f | EMD n/a' % (results['lgan_mmd-CD'], ))

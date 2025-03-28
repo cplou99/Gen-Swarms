@@ -3,7 +3,7 @@ from torch.nn import Module
 
 from .common import *
 from .encoders import *
-from .diffusion import *
+from .conditional_flow_matching import *
 from .flow import *
 
 
@@ -52,7 +52,7 @@ class FlowVAE(Module):
             writer.add_scalar('train/z_mag', z_mu.abs().max(), it)
             writer.add_scalar('train/z_var', (0.5*z_sigma).exp().mean(), it)
 
-        if wandb is not None:
+        if wandb:
             train_dict = {'loss_entropy': loss_entropy.item(), 'loss_prior': loss_prior.item(), 'loss_recons': loss_recons.item(), 'z_mean': z_mu.mean().item(), 'z_mag': z_mu.abs().max().item(), 'z_var': (0.5*z_sigma).exp().mean().item()}
             wandb.log(train_dict, step=it)
         return loss

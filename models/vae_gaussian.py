@@ -3,7 +3,7 @@ from torch.nn import Module
 
 from .common import *
 from .encoders import *
-from .diffusion import *
+from .conditional_flow_matching import *
 
 
 class GaussianVAE(Module):
@@ -12,13 +12,7 @@ class GaussianVAE(Module):
         super().__init__()
         self.args = args
         self.encoder = PointNetEncoder(args.latent_dim)
-        if self.args.security_net:
-            security_net = SecurityNet(point_dim=3, n_points=args.sample_num_points, residual=args.residual)
-        else:
-            security_net = None
-        self.diffusion = DiffusionPoint(
-            FlowNeuralNetwork(point_dim=3, context_dim=args.latent_dim, residual=args.residual), args=self.args,
-            security_net=security_net)
+        self.diffusion = CFM(CFMNeuralNetwork(point_dim=3, context_dim=args.latent_dim, residual=args.residual), args=self.args)
         
     def get_loss(self, x, writer=None, it=None, kl_weight=1.0, wandb=None):
         """

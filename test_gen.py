@@ -38,23 +38,17 @@ def normalize_point_clouds(pcs, mode, logger):
 
 # Arguments
 parser = argparse.ArgumentParser()
-# parser.add_argument('--ckpt', type=str, default='/home/cplou/PycharmProjects/Diffusion/flow/logs_gen/GEN_airplane2024_07_16__14_28_54/ckpt_700000.000000_300000.pt')
-# parser.add_argument('--ckpt', type=str, default='/home/cplou/PycharmProjects/Diffusion/flow/logs_gen/GEN_FLOW_car2024_07_19__19_32_16/ckpt_820000.000000_180000.pt')
-# parser.add_argument('--ckpt', type=str, default='/home/cplou/PycharmProjects/Diffusion/flow/logs_gen/GEN_FLOW_airplane2024_07_22__12_25_28/ckpt_820000.000000_180000.pt')
-# parser.add_argument('--ckpt', type=str, default='/home/cplou/PycharmProjects/Diffusion/flow/logs_final_gen/ShapeBbox/Airplane/ckpt_760000.000000_240000.pt')
-parser.add_argument('--ckpt', type=str, default='./logs_final_gen/ShapeUnit/Airplane/ckpt_820000.000000_180000.pt')
-
-# parser.add_argument('--ckpt', type=str, default='/home/cplou/PycharmProjects/Diffusion/flow/logs_gen/GEN_FLOW_car2024_07_23__17_50_18/ckpt_910000.000000_90000.pt')
-# parser.add_argument('--ckpt', type=str, default='/home/cplou/PycharmProjects/Diffusion/flow/logs_gen/GEN_FLOW_airplane2024_07_24__14_37_11/ckpt_870000.000000_130000.pt')
-
-# parser.add_argument('--categories', type=str_list, default=['airplane'])
+parser.add_argument('--ckpt', type=str, default='./logs_final_gen/ShapeBbox/Airplane/ckpt_760000.000000_240000.pt')
 parser.add_argument('--categories', type=str_list, default=['airplane'])
 parser.add_argument('--save_dir', type=str, default='./results')
 parser.add_argument('--device', type=str, default='cuda')
+
 # Datasets and loaders
-parser.add_argument('--dataset_path', type=str, default='../data/shapenet.hdf5')
+parser.add_argument('--dataset_path', type=str, default='./data/shapenet.hdf5')
 parser.add_argument('--batch_size', type=int, default=1)
+
 # Sampling
+parser.add_argument('--num_gen_samples', type=int, default=10)
 parser.add_argument('--sample_num_points', type=int, default=2048)
 parser.add_argument('--normalize', type=str, default=None, choices=[None, 'shape_unit', 'shape_bbox'])
 parser.add_argument('--seed', type=int, default=998)
@@ -177,13 +171,16 @@ for i in tqdm(range(0, math.ceil(len(test_dset) / args.batch_size)), 'Generate')
         if args.transition:
             x = torch.cat([trajectories, x, x[:, -1, :, :].repeat(1, 20, 1, 1)], dim=1)
         all_pcs.append(x.detach().cpu())
+    
+    if i == args.num_gen_samples:
+        print("We have reached the number of samples to be generated and will break. WARNING: metrics must be computed from the whole dataset (args.num_gen_samples=None). This is just to get some visualization examples.")
+        break
 
 gen_pcs = torch.cat(gen_pcs, dim=0)[:len(test_dset)]
 if args.transition:
     all_pcs = torch.cat(all_pcs, dim=1)
 else:
     all_pcs = torch.cat(all_pcs, dim=0)[:len(test_dset)]
-
 
 
 if args.normalize is not None:

@@ -152,8 +152,6 @@ class Orca():
         self.timeHorizon = timeHorizon
         self.radius = radius
         self.maxSpeed = maxSpeed
-        self.velocity = velocity
-        self.batch_size = batch_size
 
 
     def run(self, agents, velocity):
