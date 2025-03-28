@@ -49,7 +49,7 @@ parser.add_argument('--dataset_path', type=str, default='./data/shapenet.hdf5')
 parser.add_argument('--batch_size', type=int, default=1)
 
 # Sampling
-parser.add_argument('--num_gen_samples', type=int, default=10)
+parser.add_argument('--num_gen_samples', type=int, default=5)
 parser.add_argument('--sample_num_points', type=int, default=2048)
 parser.add_argument('--normalize', type=str, default=None, choices=[None, 'shape_unit', 'shape_bbox'])
 parser.add_argument('--seed', type=int, default=998)
@@ -57,14 +57,15 @@ parser.add_argument('--orca_training', type=eval, default=False, choices=[True, 
 parser.add_argument('--security_net', type=eval, default=False, choices=[True, False]) #new line
 parser.add_argument('--security_distance_value', type=float, default=0.01) #new line
 parser.add_argument('--orca_sampling', type=eval, default=True, choices=[True, False]) #new line
+parser.add_argument('--real_scale', type=float, default=100) #new line
 
 parser.add_argument('--neighborDist', type=float, default=0.1) #new line
 parser.add_argument('--maxNeighbors', type=int, default=100) #new line
 parser.add_argument('--timeHorizon', type=float, default=0.05) #new line
-parser.add_argument('--radius', type=float, default=0.06) #new line
+parser.add_argument('--radius', type=float, default=0.03) #new line
 parser.add_argument('--maxSpeed', type=float, default=6) #new line
 parser.add_argument('--num_steps', type=int, default=100) #new line
-parser.add_argument('--transition', type=eval, default=True, choices=[True, False]) #new line
+parser.add_argument('--transition', type=eval, default=False, choices=[True, False]) #new line
 parser.add_argument('--prior_distribution', type=str, default='normal', choices=['normal', 'uniform']) #new line
 args = parser.parse_args()
 
@@ -189,23 +190,22 @@ if args.normalize is not None:
     all_pcs = normalize_point_clouds(all_pcs, mode=args.normalize, logger=logger)
 
 # gen_pcs = gen_pcs.squeeze(dim=1)
+print("Rescaling to real scale")
+all_pcs = all_pcs * args.real_scale/3
+gen_pcs = gen_pcs * args.real_scale/3
+ref_pcs = ref_pcs * args.real_scale/3
+
 
 # Save
 logger.info('Saving point clouds...')
 np.save(os.path.join(save_dir, 'out.npy'), gen_pcs.numpy())
-if args.transition:
-    np.save(os.path.join(save_dir, 'all_pcs.npy'), all_pcs.numpy())
-else:
-    np.save(os.path.join(save_dir, 'all_pcs.npy'), all_pcs[:10].numpy())
+np.save(os.path.join(save_dir, 'all_pcs.npy'), all_pcs.numpy())
 
-last_dir = "/home/cplou/PycharmProjects/Diffusion/flow/last_results/"
-if os.path.exists(last_dir):
-    shutil.rmtree(last_dir)
-shutil.copytree(save_dir, last_dir)
+
 
 # Compute metrics
 with (torch.no_grad()):
-    results_vel = {}#compute_smoothness_metrics(all_pcs.to(args.device))
+    results_vel = compute_smoothness_metrics(all_pcs.to(args.device))
     metrics_vel = {}
     metrics_col = {}
     metrics_recons = {}
@@ -232,7 +232,7 @@ with (torch.no_grad()):
             results_vel[key] = [f"{index}:{float(x)}" for index, x in enumerate(results_vel[key])]
         json.dump(results_vel, file, indent=4)
 
-    threshold = 2 * args.radius * 100 / 3
+    threshold = 2 * args.radius * args.real_scale / 3
     results_cols = compute_collisions_metrics(all_pcs.to(args.device), threshold)
 
     # Calculate the metrics for each list in results_vel
@@ -287,15 +287,9 @@ with (torch.no_grad()):
 
 
     # Calculate the metrics
-
     last_dir = "./last_results/"
     if os.path.exists(last_dir):
         shutil.rmtree(last_dir)
     shutil.copytree(save_dir, last_dir)
 
-    #results_recons = {k:v.item() for k, v in results_recons.items()}
-   # results_vel = {k:v.item() for k, v in results_vel.items()}
-   # results_cols = {k:v.item() for k, v in results_cols.items()}
 
-   # jsd = jsd_between_point_cloud_sets(gen_pcs.cpu().numpy(), ref_pcs.cpu().numpy())
-    #results['jsd'] = jsd

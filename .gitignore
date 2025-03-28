@@ -132,3 +132,4 @@ dmypy.json
 /playgrounds
 data/shapenet.hdf5
 wandb/*
+show/*
