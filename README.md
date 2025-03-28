@@ -10,14 +10,14 @@
     <a href="https://cplou99.github.io/web/" target="_blank">Carlos Plou*</a>,
     <a href="https://sites.google.com/unizar.es/pablo-pueyo/inicio?authuser=1" target="_blank">Pablo Pueyo*</a>,
     <a href="https://webdiis.unizar.es/~rmcantin/" target="_blank">Ruben Martinez-Cantin</a>,
-    <a href="https://web.stanford.edu/~schwager/" target="_blank">Mac Schwager</a>
-    <a href="https://sites.google.com/unizar.es/anac/home?authuser=0" target="_blank">Ana C. Murillo</a>
+    <a href="https://web.stanford.edu/~schwager/" target="_blank">Mac Schwager</a>,
+    <a href="https://sites.google.com/unizar.es/anac/home?authuser=0" target="_blank">Ana C. Murillo</a>,
     <a href="https://sites.google.com/unizar.es/eduardo-montijano" target="_blank">Eduardo Montijano</a>
 </div>
 
 
 <div align="center">
-   <a href="https://longvideobench.github.io/"><strong>Homepage</strong></a> | <a href="https://huggingface.co/spaces/longvideobench/LongVideoBench"><strong>Poster</strong></a> |  <a href="https://arxiv.org/abs/2407.15754"><strong>ArXiv</strong></a>
+   <a href="https://longvideobench.github.io/"><strong>Homepage</strong></a> | <a href="https://drive.google.com/drive/u/1/folders/14HoVJ8A3RXSE5IMflDSgdaF4lt5QyFMH"><strong>Poster</strong></a> |  <a href="https://arxiv.org/abs/2408.15899"><strong>ArXiv</strong></a>
    </div>   
 
 
