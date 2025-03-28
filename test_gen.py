@@ -14,6 +14,7 @@ from models.flow import add_spectral_norm, spectral_norm_power_iteration
 from evaluation import *
 import shutil
 import torch.distributions as dist
+import json
 
 def normalize_point_clouds(pcs, mode, logger):
     if mode is None:
@@ -203,11 +204,98 @@ if os.path.exists(last_dir):
 shutil.copytree(save_dir, last_dir)
 
 # Compute metrics
-with torch.no_grad():
-    results = compute_all_metrics(gen_pcs.to(args.device), ref_pcs.to(args.device), args.batch_size)
-    results = {k:v.item() for k, v in results.items()}
-    jsd = jsd_between_point_cloud_sets(gen_pcs.cpu().numpy(), ref_pcs.cpu().numpy())
-    results['jsd'] = jsd
+with (torch.no_grad()):
+    results_vel = {}#compute_smoothness_metrics(all_pcs.to(args.device))
+    metrics_vel = {}
+    metrics_col = {}
+    metrics_recons = {}
 
-for k, v in results.items():
-    logger.info('%s: %.12f' % (k, v))
+    # Calculate the metrics for each list in results_vel
+    for key, data in results_vel.items():
+        data_array = np.array(data)
+        metrics_vel[key] = {
+            'mean': float(np.mean(data_array)),
+            'median': float(np.median(data_array)),
+            'std': float(np.std(data_array)),
+            'min': float(np.min(data_array)),
+            'max': float(np.max(data_array))
+        }
+    col_path = os.path.join(save_dir, 'col_metrics.json')
+    vel_path = os.path.join(save_dir, 'vel_metrics.json')
+    recons_path = os.path.join(save_dir, 'recons_metrics.json')
+    full_vel_path = os.path.join(save_dir, 'full_vel_metrics.json')
+    full_col_path = os.path.join(save_dir, 'full_col_metrics.json')
+
+    print(metrics_vel)
+    with open(full_vel_path, 'w') as file:
+        for key in results_vel:
+            results_vel[key] = [f"{index}:{float(x)}" for index, x in enumerate(results_vel[key])]
+        json.dump(results_vel, file, indent=4)
+
+    threshold = 2 * args.radius * 100 / 3
+    results_cols = compute_collisions_metrics(all_pcs.to(args.device), threshold)
+
+    # Calculate the metrics for each list in results_vel
+    for key, data in results_cols.items():
+        if not key == 'all_cols':
+            data_array = np.array(data)
+            metrics_col[key] = {
+                'mean': float(np.mean(data_array)),
+                'median': float(np.median(data_array)),
+                'std': float(np.std(data_array)),
+                'min': float(np.min(data_array)),
+                'max': float(np.max(data_array))
+            }
+
+    with open(full_col_path, 'w') as file:
+        for key in results_cols:
+            if not key == 'all_cols':
+                results_cols[key] = [f"{index}:{float(x)}" for index, x in enumerate(results_cols[key])]
+        results_cols['threshold'] = threshold
+        json.dump(results_cols, file, indent=4)
+
+    finals = all_pcs[:, -1, :, :]
+    finals = finals.to(torch.float32)
+
+    results_recons = compute_recons_metrics(finals.to(args.device), ref_pcs.to(args.device), args.batch_size)
+
+    # results_recons = compute_recons_metrics(finals.to(args.device), ref_pcs.to(args.device), args.batch_size)
+
+    # Calculate the metrics for each list in results_vel
+    for key, data in results_recons.items():
+        data_array = np.array(data.cpu())
+        metrics_recons[key] = {
+            'mean': float(np.mean(data_array)),
+            'median': float(np.median(data_array)),
+            'std': float(np.std(data_array)),
+            'min': float(np.min(data_array)),
+            'max': float(np.max(data_array))
+        }
+
+    # Save the metrics to a JSON file
+    with open(col_path, 'w') as file:
+        json.dump(metrics_col, file)
+    with open(recons_path, 'w') as file:
+        json.dump(metrics_recons, file)
+    with open(vel_path, 'w') as file:
+        json.dump(metrics_vel, file)
+
+
+    print("Results vel: ", results_vel)
+    print("Results cols: ", results_cols)
+    print("Results recons: ", results_recons)
+
+
+    # Calculate the metrics
+
+    last_dir = "./last_results/"
+    if os.path.exists(last_dir):
+        shutil.rmtree(last_dir)
+    shutil.copytree(save_dir, last_dir)
+
+    #results_recons = {k:v.item() for k, v in results_recons.items()}
+   # results_vel = {k:v.item() for k, v in results_vel.items()}
+   # results_cols = {k:v.item() for k, v in results_cols.items()}
+
+   # jsd = jsd_between_point_cloud_sets(gen_pcs.cpu().numpy(), ref_pcs.cpu().numpy())
+    #results['jsd'] = jsd

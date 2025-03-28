@@ -8,6 +8,7 @@ from scipy.stats import entropy
 from sklearn.neighbors import NearestNeighbors
 from numpy.linalg import norm
 from tqdm.auto import tqdm
+from collections import defaultdict
 
 
 _EMD_NOT_IMPL_WARNED = False
@@ -22,6 +23,11 @@ def emd_approx(sample, ref):
         print('  * You may implement your own EMD in the function `emd_approx` in ./evaluation/evaluation_metrics.py')
         print('\n')
     return emd
+
+
+def our_emd(sample, ref):
+    d = earth_mover_distance(ref, sample, transpose=False)  # p1: B x N1 x 3, p2: B x N2 x 3
+    return d
 
 
 # Borrow from https://github.com/ThibaultGROUEIX/AtlasNet
@@ -115,6 +121,84 @@ def _pairwise_EMD_CD_(sample_pcs, ref_pcs, batch_size, verbose=True):
     return all_cd, all_emd
 
 
+def _compute_cols_metrics(all_trajs, threshold, verbose=True):
+    N_sample = all_trajs.shape[0]
+
+    all_cols_finals = []
+    all_cols_traj = []
+    all_cols_init = []
+    all_cols_string = []
+
+    iterator = range(N_sample)
+    if verbose:
+        iterator = tqdm(iterator, desc='Cols Metrics')
+    for sample_b_start in iterator:
+        sample_batch = all_trajs[sample_b_start]
+
+        sample_batch_exp = sample_batch.unsqueeze(0)
+        sample_batch_exp = sample_batch_exp.contiguous()
+
+        #cols_final_batch = collisions_one(sample_batch_exp[0, sample_batch_exp.shape[1] - 1, :, :].cpu(), threshold) # taking the last step
+        #cols_init_batch = collisions_one(sample_batch_exp[0, 0, :, :].cpu(), threshold)
+        cols_traj_batch = collisions_traj(sample_batch_exp[0, :, :, :].cpu(), threshold)
+
+        # Convert each number to a string
+        string_numbers = map(str, cols_traj_batch)
+        # Join them with commas
+        comma_separated_string = ','.join(string_numbers)
+
+        #all_cols_finals.append(cols_traj_batch[sample_batch_exp.shape[1] - 1])
+        all_cols_finals.append(cols_traj_batch[sample_batch_exp.shape[1] - 2])
+        all_cols_traj.append(np.mean(cols_traj_batch))
+        all_cols_init.append(cols_traj_batch[0])
+        all_cols_string.append(comma_separated_string)
+
+    results = {
+        'cols_init': all_cols_init,
+        'cols_finals': all_cols_finals,
+        'mean': all_cols_traj,
+        'all_cols': all_cols_string
+    }
+    return results
+def _compute_smoothness_metrics(all_trajs, verbose=True):
+    N_sample = all_trajs.shape[0]
+    num_steps = all_trajs.shape[1]
+    delta_t = 1 / 1#num_steps
+
+    all_vel_dir = []
+    all_acc = []
+    all_jerk = []
+    all_distances = []
+    iterator = range(N_sample)
+
+    if verbose:
+        iterator = tqdm(iterator, desc='Smoothness Metrics')
+    for sample_b_start in iterator:
+        sample_batch = all_trajs[sample_b_start]
+
+        sample_batch_exp = sample_batch.unsqueeze(0)
+        sample_batch_exp = sample_batch_exp.contiguous()
+
+        distances = calculate_mean_distance(sample_batch_exp.cpu())
+        mean_acceleration_norm_batch, _, _, mean_jerk_norm_batch, _, _ = acc_jerk(sample_batch_exp.cpu(),    delta_t)
+        vel_dir_batch = vel_direction(sample_batch_exp.cpu(), delta_t)
+
+        #vel_vector_batch = vel_rms_deviation(sample_batch_exp.cpu(), delta_t)
+        #acc_batch = acc_module(sample_batch_exp.cpu(), 1)
+
+        all_vel_dir.append(vel_dir_batch)
+        all_acc.append(mean_acceleration_norm_batch)
+        all_jerk.append(mean_jerk_norm_batch)
+        all_distances.append(distances)
+
+    results = {
+        'vel_dir': all_vel_dir,
+        'acc': all_acc,
+        'jerk': all_jerk,
+        'distance': all_distances
+    }
+    return results
+
 # Adapted from https://github.com/xuqiantong/
 # GAN-Metrics/blob/master/framework/metric.py
 def knn(Mxx, Mxy, Myy, k, sqrt=False):
@@ -180,28 +264,31 @@ def lgan_mmd_cov_match(all_dist):
         'lgan_cov': cov,
         'lgan_mmd_smp': mmd_smp,
     }, min_idx.view(-1)
+def compute_smoothness_metrics(all_trajs):
+    M_s_s = _compute_smoothness_metrics(all_trajs)
+    return M_s_s
 
+def compute_collisions_metrics(all_trajs, threshold):
+    M_s_s = _compute_cols_metrics(all_trajs, threshold)
+    return M_s_s
 
-def compute_all_metrics(sample_pcs, ref_pcs, batch_size):
+def compute_recons_metrics(sample_pcs, ref_pcs, batch_size):
     results = {}
 
-    print("Pairwise EMD CD")
+    # print("Pairwise EMD CD")
     M_rs_cd, M_rs_emd = _pairwise_EMD_CD_(ref_pcs, sample_pcs, batch_size)
 
-    ## CD
+    ## CD COV
     res_cd = lgan_mmd_cov(M_rs_cd.t())
     results.update({
         "%s-CD" % k: v for k, v in res_cd.items()
     })
-    
-    ## EMD
+    #
+    # ## EMD COV
     # res_emd = lgan_mmd_cov(M_rs_emd.t())
     # results.update({
     #     "%s-EMD" % k: v for k, v in res_emd.items()
     # })
-
-    for k, v in results.items():
-        print('[%s] %.8f' % (k, v.item()))
 
     M_rr_cd, M_rr_emd = _pairwise_EMD_CD_(ref_pcs, ref_pcs, batch_size)
     M_ss_cd, M_ss_emd = _pairwise_EMD_CD_(sample_pcs, sample_pcs, batch_size)
@@ -212,12 +299,14 @@ def compute_all_metrics(sample_pcs, ref_pcs, batch_size):
     results.update({
         "1-NN-CD-%s" % k: v for k, v in one_nn_cd_res.items() if 'acc' in k
     })
-    ## EMD
+    # EMD
     # one_nn_emd_res = knn(M_rr_emd, M_rs_emd, M_ss_emd, 1, sqrt=False)
     # results.update({
     #     "1-NN-EMD-%s" % k: v for k, v in one_nn_emd_res.items() if 'acc' in k
     # })
 
+    for k, v in results.items():
+        print('[%s] %.8f' % (k, v.item()))
     return results
 
 
@@ -244,6 +333,149 @@ def unit_cube_grid_point_cloud(resolution, clip_sphere=False):
 
     return grid, spacing
 
+def calculate_distances(points):
+    num_points = points.shape[0]
+    distances = np.zeros((num_points, num_points))
+    for i in range(num_points):
+        for j in range(i + 1, num_points):
+            distance = np.linalg.norm(points[i] - points[j])
+            distances[i, j] = distance
+            distances[j, i] = distance
+    return distances
+
+def collisions_one(pc, threshold):
+    differences = pc.unsqueeze(1) - pc.unsqueeze(0).detach()
+    dist = torch.norm(differences, dim=-1)
+    dist[dist == 0] = np.inf
+    min_distance = dist.min(dim=1)[0]
+    #min_distance_all = dist.min()
+    penalty_mask_sdv = (min_distance < threshold)
+    points_colliding = torch.sum(penalty_mask_sdv)
+    # percentage_sdv = (points_colliding.item() / pc.shape[0]) * 100
+    # results = {
+    #     'points_colliding': points_colliding,
+    #     'percentage_coll': percentage_sdv,
+    #     'min_d': dist.min(),
+    #     'max_d': dist.max()
+    # }
+    return points_colliding.item()
+
+def collisions_traj(traj, threshold):
+    collisions = []
+    # Iterate over batches and time steps
+    for step_idx in range(0,traj.shape[0]-1):
+        collisions.append(collisions_one(traj[step_idx], threshold))
+    return collisions
+
+def vel_rms_deviation(all_pcs, delta_t):
+    # Step 1: Calculate the velocities (differences between consecutive time steps)
+    velocities = np.diff(all_pcs, axis=1) / delta_t  # Shape will be (b, 200, 256, 3)
+    # Step 2: Calculate the mean velocity along the time axis
+    mean_velocity = np.mean(velocities, axis=1, keepdims=True)  # Shape will be (b, 1, 256, 3)
+    # Step 3: Calculate the deviation of each velocity from the mean velocity
+    deviation_from_mean = velocities - mean_velocity  # Shape will be (b, 200, 256, 3)
+    # Step 4: Square the deviations
+    squared_deviation = np.square(deviation_from_mean)  # Shape will be (b, 200, 256, 3)
+    # Step 5: Calculate the mean of the squared deviations along the time axis
+    mean_squared_deviation = np.mean(squared_deviation, axis=1)  # Shape will be (b, 256, 3)
+    # Step 6: Compute the RMS deviation
+    rms_deviation = np.sqrt(mean_squared_deviation)  # Shape will be (b, 256, 3)
+    # Step 7: Calculate the average RMS deviation across all batches and points
+    average_rms_deviation = np.mean(rms_deviation)  # Scalar value
+
+    return average_rms_deviation
+def calculate_mean_distance(trajectory):
+    # Remove the singleton dimension
+    tensor = np.squeeze(trajectory)  # Shape becomes (101, 2048, 3)
+
+    # Compute the distances between consecutive steps
+    distances = np.linalg.norm(np.diff(tensor, axis=0), axis=2)  # Shape (100, 2048)
+
+    # Sum the distances for each point
+    total_distances = np.sum(distances, axis=0)  # Shape (2048,)
+
+    # total_distances now contains the distance each point has traversed
+    print(total_distances)
+
+    return np.mean(total_distances)
+
+
+
+def acc_jerk(trajectory, delta_t):
+    """
+    Compute smoothness metrics of a trajectory by analyzing acceleration and jerk.
+
+    Parameters:
+    - trajectory: numpy array of shape (n_samples, n_steps, n_points, n_dimensions)
+    - delta_t: time interval between consecutive steps
+
+    Returns:
+    - mean_acceleration_norm: Mean of the acceleration norms across all steps and points
+    - variance_acceleration_norm: Variance of the acceleration norms across all steps and points
+    - rms_acceleration_norm: Root Mean Square of the acceleration norms across all steps and points
+    - mean_jerk_norm: Mean of the jerk norms across all steps and points
+    - variance_jerk_norm: Variance of the jerk norms across all steps and points
+    - rms_jerk_norm: Root Mean Square of the jerk norms across all steps and points
+    """
+
+    # Compute velocities: shape (n_samples, n_steps-1, n_points, n_dimensions)
+    velocities = np.diff(trajectory, axis=1) / delta_t
+
+    # Compute accelerations: shape (n_samples, n_steps-2, n_points, n_dimensions)
+    accelerations = np.diff(velocities, axis=1) / delta_t
+
+    # Compute the norm of accelerations: shape (n_samples, n_steps-2, n_points)
+    acceleration_norms = np.linalg.norm(accelerations, axis=-1)
+
+    # Compute jerk: shape (n_samples, n_steps-3, n_points, n_dimensions)
+    jerks = np.diff(accelerations, axis=1) / delta_t
+    jerk_norms = np.linalg.norm(jerks, axis=-1)
+
+    # Compute smoothness metrics for acceleration
+    mean_acceleration_norm = np.mean(acceleration_norms)
+    variance_acceleration_norm = np.var(acceleration_norms)
+    rms_acceleration_norm = np.sqrt(np.mean(acceleration_norms ** 2))
+
+    # Compute smoothness metrics for jerk
+    mean_jerk_norm = np.mean(jerk_norms)
+    variance_jerk_norm = np.var(jerk_norms)
+    rms_jerk_norm = np.sqrt(np.mean(jerk_norms ** 2))
+
+    return (mean_acceleration_norm, variance_acceleration_norm, rms_acceleration_norm,
+            mean_jerk_norm, variance_jerk_norm, rms_jerk_norm)
+
+
+def vel_direction(all_pcs, delta_t):
+    """
+    Compute the variation in the direction of velocities.
+
+    Parameters:
+    - all_pcs: numpy array of shape (n_samples, n_steps, n_points, n_dimensions)
+    - delta_t: time interval between consecutive steps
+
+    Returns:
+    - mean_direction_variation: Mean of the standard deviations of angles between consecutive velocities
+    """
+
+    # Step 1: Calculate the velocities (differences between consecutive time steps)
+    velocities = np.diff(all_pcs, axis=1) / delta_t  # Shape: (n_samples, n_steps-1, n_points, n_dimensions)
+    # Step 2: Compute norms of velocities
+    norms = np.linalg.norm(velocities, axis=-1, keepdims=True)  # Shape: (n_samples, n_steps-1, n_points, 1)
+    # Step 3: Normalize velocities
+    normalized_velocities = velocities / norms  # Shape: (n_samples, n_steps-1, n_points, n_dimensions)
+    # Step 4: Compute dot products between consecutive normalized velocities
+    dot_products = np.einsum('ijkl,ijkm->ijk', normalized_velocities[:, :-1],
+                             normalized_velocities[:, 1:])  # Shape: (n_samples, n_steps-2, n_points)
+    # Ensure dot_products are within the valid range for arccos due to floating point precision
+    dot_products = np.clip(dot_products, -1.0, 1.0)
+    # Convert dot products to angles (in radians)
+    angles = np.arccos(dot_products)  # Shape: (n_samples, n_steps-2, n_points)
+    # Compute the standard deviation of the angles across all time steps to measure variation in direction
+    direction_variation = np.std(angles, axis=1)  # Shape: (n_samples, n_points)
+    # Return the mean of the standard deviations
+    mean_direction_variation = np.mean(direction_variation)  # Scalar value
+
+    return mean_direction_variation
 
 def jsd_between_point_cloud_sets(
         sample_pcs, ref_pcs, resolution=28):
