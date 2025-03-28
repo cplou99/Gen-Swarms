@@ -133,3 +133,4 @@ dmypy.json
 data/shapenet.hdf5
 wandb/*
 show/*
+Python-RVO2-3D/*
