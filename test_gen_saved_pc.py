@@ -39,7 +39,7 @@ def normalize_point_clouds(pcs, mode, logger):
 
 # Arguments
 parser = argparse.ArgumentParser()
-parser.add_argument('--ckpt', type=str, default='./logs_gen/gen-swarms_airplane.pt')
+parser.add_argument('--ckpt', type=str, default='./logs_final_gen/ShapeBbox/Airplane/ckpt_760000.000000_240000.pt')
 parser.add_argument('--categories', type=str_list, default=['airplane'])
 parser.add_argument('--save_dir', type=str, default='./results')
 parser.add_argument('--device', type=str, default='cuda')
@@ -198,7 +198,7 @@ if args.transition:
 else:
     np.save(os.path.join(save_dir, 'all_pcs.npy'), all_pcs[:10].numpy())
 
-last_dir = "/home/cplou/PycharmProjects/Diffusion/flow/last_results/"
+last_dir = "./last_results/"
 if os.path.exists(last_dir):
     shutil.rmtree(last_dir)
 shutil.copytree(save_dir, last_dir)
