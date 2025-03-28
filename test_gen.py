@@ -38,7 +38,7 @@ def normalize_point_clouds(pcs, mode, logger):
 
 # Arguments
 parser = argparse.ArgumentParser()
-parser.add_argument('--ckpt', type=str, default='./logs_gen/Airplane/ckpt_760000.000000_240000.pt')
+parser.add_argument('--ckpt', type=str, default='./logs_gen/gen-swarms_airplane.pt')
 parser.add_argument('--categories', type=str_list, default=['airplane'])
 parser.add_argument('--save_dir', type=str, default='./results')
 parser.add_argument('--device', type=str, default='cuda')
