@@ -1,12 +1,11 @@
 
 <h1 align="center">Gen-Swarms: Adapting Deep Generative Models to Swarms of Drones</h1>
-<h3 align="center">ECCV 2024 | MAAS Workshop</h3>
 
 <div align="center">
-    <img src="docs/img/FALCONEyeLogo.png" alt="Description" width="150">
+    <img src="docs/Gen-SwarmsLogo.png" alt="Description" width="75">
 </div>
 
-
+<h3 align="center">ECCV 2024 | MAAS Workshop</h3>
  <div align="center">
     <a href="https://cplou99.github.io/web/" target="_blank">Carlos Plou*</a>,
     <a href="https://sites.google.com/unizar.es/pablo-pueyo/inicio?authuser=1" target="_blank">Pablo Pueyo*</a>,
