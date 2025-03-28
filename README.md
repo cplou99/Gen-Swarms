@@ -1,5 +1,6 @@
 
 <h1 align="center">Gen-Swarms: Adapting Deep Generative Models to Swarms of Drones</h1>
+<h2 align="center">ECCV 2024 | MAAS Workshop</h2>
 
 <div align="center">
     <img src="docs/img/FALCONEyeLogo.png" alt="Description" width="150">
@@ -17,7 +18,7 @@
 
 
 <div align="center">
-   <a href="https://longvideobench.github.io/"><strong>Homepage</strong></a> | <a href="https://drive.google.com/drive/u/1/folders/14HoVJ8A3RXSE5IMflDSgdaF4lt5QyFMH"><strong>Poster</strong></a> |  <a href="https://arxiv.org/abs/2408.15899"><strong>ArXiv</strong></a>
+   <a href="https://longvideobench.github.io/"><strong>Homepage</strong></a> | <a href="docs/ECCVWMAAS2024.png"><strong>Poster</strong></a> |  <a href="https://arxiv.org/abs/2408.15899"><strong>ArXiv</strong></a>
    </div>   
 
 
