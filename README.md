@@ -1,6 +1,6 @@
 
 <h1 align="center">Gen-Swarms: Adapting Deep Generative Models to Swarms of Drones</h1>
-<h2 align="center">ECCV 2024 | MAAS Workshop</h2>
+<h3 align="center">ECCV 2024 | MAAS Workshop</h3>
 
 <div align="center">
     <img src="docs/img/FALCONEyeLogo.png" alt="Description" width="150">
