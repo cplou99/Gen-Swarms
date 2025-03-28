@@ -17,7 +17,7 @@
 
 
 <div align="center">
-   <a href="https://longvideobench.github.io/"><strong>Homepage</strong></a> | <a href="docs/ECCVWMAAS2024.png"><strong>Poster</strong></a> |  <a href="https://arxiv.org/abs/2408.15899"><strong>ArXiv</strong></a>
+   <a href="https://cplou99.github.io/Gen-Swarms/"><strong>Homepage</strong></a> | <a href="docs/ECCVWMAAS2024.png"><strong>Poster</strong></a> |  <a href="https://arxiv.org/abs/2408.15899"><strong>ArXiv</strong></a>
    </div>   
 
 
@@ -72,7 +72,7 @@ To generate some pointclouds with their trajectories from a trained model, pleas
 python test_gen.py --ckpt ./logs_gen/gen-swarms_airplane.pt --categories airplane --num_gen_samples 10
 ```
 
-Results will be saved at `results` folder. If you want to replicate the results of the paper, please run with `--num_gen_samples None`.
+Results will be saved at `results` folder. If you want to replicate the results of the paper, please set `--num_gen_samples None` to generate 607 samples.
 You may find some additional scripts inside `show` folder to visualize results.
 
 ## Citation
