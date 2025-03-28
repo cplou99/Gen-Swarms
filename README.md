@@ -2,7 +2,7 @@
 <h1 align="center">Gen-Swarms: Adapting Deep Generative Models to Swarms of Drones</h1>
 
 <div align="center">
-    <img src="docs/Gen-SwarmsLogo.png" alt="Description" width="150">
+    <img src="docs/Gen-SwarmsLogo.png" alt="Description" width="200">
 </div>
 
 <h3 align="center">ECCV 2024 | MAAS Workshop</h3>

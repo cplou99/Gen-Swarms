@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+
+  <title>Gen-Swarms</title>
+  <meta name="description" content="Adapting Deep Generative Models to Swarms of Drones">
+  <meta name="keywords" content="swarms, generative models">
+
+  <meta property="og:title" content="Gen-Swarms">
+  <meta property="og:description" content="Adapting Deep Generative Models to Swarms of Drones">
+  <meta property="og:url" content="https://cplou99.github.io/Gen-Swarms/">
+  <meta property="og:type" content="website">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Gen-Swarms">
+  <meta name="twitter:description" content="Adapting Deep Generative Models to Swarms of Drones">
+
+  <link rel="stylesheet" href="css/main.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+  <script src="js/main.js"></script>
+</head>
+<body>
+  <header>
+    <div class="venue">ECCV 2024 - MAAS Workshop</div>
+    
+    <div style="display: flex; justify-content: center; position: relative; margin-bottom: 0;">
+      <img src="img/Gen-SwarmsLogo.png" alt="Logo" style="width: 80px; height: auto; position: absolute; left: calc(50% - 190px); transform: translateX(-70%);">
+      <h1 class="title" style="font-size: 50px; font-family: 'Google Sans', 'Roboto', sans-serif; margin-bottom: 0; text-align: center;">
+        Gen-Swarms
+      </h1>
+    </div>
+  
+    <p style="font-size: 30px; font-weight: 500; margin: 5px 0; line-height: 1.4; text-align: center; font-family: 'Google Sans', 'Roboto', sans-serif;">
+      Adapting Deep Generative Models to Swarms of Drones
+    </p>
+  </header>
+
+
+  
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;700&display=swap" rel="stylesheet">
+  
+  
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <div class="authors">
+      <span><a href="https://cplou99.github.io/web">Carlos Plou</a><sup>1,*</sup></span>
+      <span><a href="https://sites.google.com/unizar.es/pablo-pueyo/inicio?authuser=1">Pablo Pueyo</a><sup>1,*</sup></span>
+      <span><a href="https://webdiis.unizar.es/~rmcantin/">Ruben Martinez-Cantin</a><sup>1</sup></span>
+      <span><a href="https://web.stanford.edu/~schwager/">Mac Schwager</a><sup>2</sup></span>
+      <span><a href="https://sites.google.com/unizar.es/anac">Ana C. Murillo</a><sup>1</sup></span>
+      <span><a href="https://sites.google.com/unizar.es/eduardo-montijano">Eduardo Montijano</a><sup>1</sup></span>
+  </div>
+
+  <div class="notes">
+        <span><sup>*</sup>Joint first authors</span>
+    </div>
+
+  <div class="affiliations">
+        <span><sup>1</sup>DIIS-I3A, Universidad de Zaragoza, Spain</span>
+        <span><sup>2</sup>Dept. of Aeronautics and Astronautics, Stanford University, USA</span>
+  </div>
+
+  <div class="links">
+      <a href="https://arxiv.org/abs/2408.15899">
+        
+          <i class="ai ai-arxiv"></i>
+        
+        Paper
+      </a>
+      <a href="https://github.com/cplou99/Gen-Swarms">
+        
+          <i class="bi bi-github"></i>
+        
+        Code
+      </a>
+      <a href="https://github.com/cplou99/Gen-Swarms/blob/main/docs/ECCVWMAAS2024.png">
+        
+          <i class="img/PosterLogo.png img/PosterLogo.png"></i>
+        
+        Poster
+      </a>
+  </div>
+</header>
+
+<main>
+  <section class="content">
+    <style>
+    .btn-group button {
+        padding: 8px 16px;
+        margin: 5px;
+        font-size: 16px;
+        background-color: #444;
+        color: white;
+        border: 1px solid #444;
+        border-radius: 15px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .btn-group button:hover {
+        background-color: #333;
+    }
+    .btn-group button img {
+        width: 18px;
+        height: 18px;
+    }
+    .links a {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 20px;
+    margin: 5px;
+    font-size: 16px;
+    color: white !important;
+    background-color: #444 !important;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    gap: 8px;
+    }
+
+
+    .links a i {
+    margin-right: 5px;
+    }
+
+    h2 {
+        font-size: 2rem; /* Slightly larger for better visibility */
+        font-weight: 700; /* Bold */
+        margin-bottom: 0.5em;
+        margin-top: 0.5em;
+        text-align: center; /* Center-align */
+        font-family: 'Google Sans', 'Roboto', sans-serif; /* Matching title */
+        }
+
+    h3 {
+        font-size: 1.5rem; /* More prominent than before */
+        font-weight: 700; /* Bold */
+        margin-bottom: 0.5em;
+        margin-top: 0.5em;
+        text-align: center; /* Center-align */
+        font-family: 'Google Sans', 'Roboto', sans-serif; /* Matching title */
+    }
+
+    body {
+        font-family: 'Google Sans', 'Roboto', sans-serif;
+        color: var(--text-color);
+        line-height: 1.5em;
+        font-weight: 400;
+        background-color: white;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 1rem;
+        font-size: 18px;
+    }
+
+    hr {
+        border: none;
+        height: 2px;
+        background-color: #444; /* Color oscuro y elegante */
+        margin: 30px auto 0px auto; /* Más espacio arriba, menos abajo */
+        opacity: 0.7; /* Ligera transparencia */
+        width: 80%; /* Un poco más corto para estilizar */
+    }
+
+    .sub-separator {
+        border: none;
+        height: 1px;
+        background-color: #666; /* A bit lighter */
+        margin: 20px auto 5px auto; /* Less space than main separator */
+        opacity: 0.5; /* More transparent */
+        width: 40%; /* Shorter width */
+    }
+
+    .small-image {
+        display: block;
+        max-width: 80%; /* Ajusta el tamaño según prefieras */
+        margin: 20px auto; /* Centra la imagen */
+        border-radius: 10px; /* Esquinas redondeadas para un toque más elegante */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave */
+    }
+
+    .small-image-simple {
+        display: block;
+        max-width: 80%; /* Ajusta el tamaño según prefieras */
+        margin: 20px auto; /* Centra la imagen */
+    }
+
+    .image-pair {
+        display: flex;
+        justify-content: center;
+        gap: 10px; /* Espacio entre las imágenes */
+        margin: 20px auto; /* Margen superior e inferior */
+        width: 100%; /* Ocupa toda la anchura */
+    }
+
+    .image-pair img {
+        width: 48%; /* Cada imagen ocupa aproximadamente la mitad */
+        height: auto; /* Ajusta la altura proporcionalmente */
+        border-radius: 8px; /* Bordes redondeados */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra ligera */
+    }
+
+
+
+</style>
+<hr>
+<h2 id="motivation">Motivation</h2>
+<p><strong>Drone shows have become a trend</strong>. However, these displays often require manual design and intervention, limiting their scalability, variety, and affordability. Therefore, applying <strong>generative models</strong> to drone shows offers a <strong>promising solution</strong>. However, a direct application of these diffusion-based methods is unfeasible since drone trajectories present: (1) lack of smoothness, and (2) continuous collisions.</p>
+<img src="img/task.png" class="small-image-simple">
+<hr>
+<h2 id="gen-swarms">Gen-Swarms</h2>
+<p><strong>Gen-Swarms</strong> is a novel <strong>framework</strong> that leverages the strengths of <strong>3D point clouds generative models, flow matching and reactive navigation algorithms to automatically generate drone shows</strong>.
+In this way, given a text category like Airplane, Gen-Swarms can rapidly and continuously generate numerous variations of 3D airplane shapes providing feasible drone trajectories towards the generated 3D shapes.</p>
+<img src="img/teaser.jpg" class="small-image-simple">
+<hr class="sub-separator">
+<h3 id="conditional-flow-matching-cfm-for-3d-point-clouds">Conditional Flow Matching (CFM) for 3D point clouds</h3>
+<p>Flow matching (FM) is a relatively new strategy for making Continuous Normalizing Flows trainable, which provide <strong>smooth transitions</strong> from noise to accurate outputs. We provide the <strong>first application of flow matching algorithms to 3D point cloud generation</strong>. We incorporate an encoder to obtain a latent space representation of the 3D point cloud distribution, which conditions the posterior sampling process.</p>
+<img src="img/Method.png" class="small-image-simple">
+<hr>
+<h2 id="results">Results</h2>
+<hr class="sub-separator">
+<h3 id="quantitative-results">Quantitative results</h3>
+<p>Gen-Swarms delivers balanced performance, excelling in collision avoidance, energy efficiency, and maintaining high quality while ensuring smooth trajectories. This is because Gen-Swarms uses CFM as a closed-loop controller with ORCA as an additional reactive navigation layer inside the loop.</p>
+<img src="img/table_results.png" class="small-image-simple">
+<hr class="sub-separator">
+<h3 id="smooth-trajectories">Smooth Trajectories</h3>
+<p>Gen-Swarms produces smooth trajectories for each 3D component as the drones move to form a significant 3D shape.</p>
+<img src="img/trajectories.jpg" class="small-image-simple">
+<hr class="sub-separator">
+<h3 id="collision-avoidance">Collision avoidance</h3>
+<p>In contrast to baselines, Gen-Swarms produce 3D accurate shapes free of collisions (red points).</p>
+<img src="img/collisions_methods.jpg" class="small-image-simple">
+<hr class="sub-separator">
+<h3 id="generative-capabilities">Generative capabilities</h3>
+<p>Gen-Swarms is able to generate accurate 3D shapes for each category of the ShapeNet dataset.</p>
+<img src="img/ev_clouds.jpg" class="small-image-simple">
+<hr class="sub-separator">
+<h2 id="bibtex">BibTeX</h2>
+<pre tabindex="0"><code>@article{plou2024genswarmsadaptingdeepgenerative,
+      title={Gen-Swarms: Adapting Deep Generative Models to Swarms of Drones}, 
+      author={Carlos Plou and Pablo Pueyo and Ruben Martinez-Cantin and Mac Schwager and Ana C. Murillo and Eduardo Montijano},
+      year={2024},
+      eprint={2408.15899},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2408.15899}, 
+}
+</code></pre>
+  </section>
+</main>
+
+<footer>
+  &copy; 2025 RoPeRT Research Group, Universidad de Zaragoza
+</footer>
+
+
+</body>
+</html>
