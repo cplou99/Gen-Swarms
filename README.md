@@ -6,7 +6,7 @@
 </div>
 
 
- <div>
+ <div align="center">
     <a href="https://cplou99.github.io/web/" target="_blank">Carlos Plou*</a>,
     <a href="https://sites.google.com/unizar.es/pablo-pueyo/inicio?authuser=1" target="_blank">Pablo Pueyo*</a>,
     <a href="https://webdiis.unizar.es/~rmcantin/" target="_blank">Ruben Martinez-Cantin</a>,
@@ -16,7 +16,7 @@
 </div>
 
 
-<div>
+<div align="center">
    <a href="https://longvideobench.github.io/"><strong>Homepage</strong></a> | <a href="https://huggingface.co/spaces/longvideobench/LongVideoBench"><strong>Poster</strong></a> |  <a href="https://arxiv.org/abs/2407.15754"><strong>ArXiv</strong></a>
    </div>   
 
