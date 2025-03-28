@@ -1,0 +1,96 @@
+[2024-07-25 11:02:33,917::test::INFO] [ARGS::ckpt] '/home/cplou/PycharmProjects/Diffusion/flow/logs_final_gen/ShapeUnit/Airplane/ckpt_820000.000000_180000.pt'
+[2024-07-25 11:02:33,918::test::INFO] [ARGS::categories] ['airplane']
+[2024-07-25 11:02:33,918::test::INFO] [ARGS::save_dir] './results'
+[2024-07-25 11:02:33,918::test::INFO] [ARGS::device] 'cuda'
+[2024-07-25 11:02:33,918::test::INFO] [ARGS::dataset_path] '../data/shapenet.hdf5'
+[2024-07-25 11:02:33,918::test::INFO] [ARGS::batch_size] 1
+[2024-07-25 11:02:33,918::test::INFO] [ARGS::sample_num_points] 2048
+[2024-07-25 11:02:33,918::test::INFO] [ARGS::normalize] None
+[2024-07-25 11:02:33,918::test::INFO] [ARGS::seed] 998
+[2024-07-25 11:02:33,918::test::INFO] [ARGS::orca_training] False
+[2024-07-25 11:02:33,918::test::INFO] [ARGS::security_net] False
+[2024-07-25 11:02:33,918::test::INFO] [ARGS::security_distance_value] 0.01
+[2024-07-25 11:02:33,918::test::INFO] [ARGS::orca_sampling] True
+[2024-07-25 11:02:33,918::test::INFO] [ARGS::neighborDist] 0.1
+[2024-07-25 11:02:33,918::test::INFO] [ARGS::maxNeighbors] 100
+[2024-07-25 11:02:33,918::test::INFO] [ARGS::timeHorizon] 0.05
+[2024-07-25 11:02:33,918::test::INFO] [ARGS::radius] 0.06
+[2024-07-25 11:02:33,918::test::INFO] [ARGS::maxSpeed] 6
+[2024-07-25 11:02:33,918::test::INFO] [ARGS::num_steps] 100
+[2024-07-25 11:02:33,918::test::INFO] [ARGS::transition] True
+[2024-07-25 11:02:33,918::test::INFO] [ARGS::prior_distribution] 'normal'
+[2024-07-25 11:02:34,025::test::INFO] Loading datasets...
+[2024-07-25 11:02:34,281::test::INFO] Loading model...
+[2024-07-25 11:02:34,302::test::INFO] FlowVAE(
+  (encoder): PointNetEncoder(
+    (conv1): Conv1d(3, 128, kernel_size=(1,), stride=(1,))
+    (conv2): Conv1d(128, 128, kernel_size=(1,), stride=(1,))
+    (conv3): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+    (conv4): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+    (bn1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (bn2): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (bn4): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (fc1_m): Linear(in_features=512, out_features=256, bias=True)
+    (fc2_m): Linear(in_features=256, out_features=128, bias=True)
+    (fc3_m): Linear(in_features=128, out_features=256, bias=True)
+    (fc_bn1_m): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (fc_bn2_m): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (fc1_v): Linear(in_features=512, out_features=256, bias=True)
+    (fc2_v): Linear(in_features=256, out_features=128, bias=True)
+    (fc3_v): Linear(in_features=128, out_features=256, bias=True)
+    (fc_bn1_v): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (fc_bn2_v): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (flow): SequentialFlow(
+    (chain): ModuleList(
+      (0-13): 14 x CouplingLayer(
+        (net_s_t): Sequential(
+          (0): Linear(in_features=128, out_features=256, bias=True)
+          (1): ReLU(inplace=True)
+          (2): Linear(in_features=256, out_features=256, bias=True)
+          (3): ReLU(inplace=True)
+          (4): Linear(in_features=256, out_features=256, bias=True)
+        )
+      )
+    )
+  )
+  (diffusion): DiffusionPoint(
+    (flow_model): FlowNeuralNetwork(
+      (time_embedding): ZeroToOneTimeEmbedding()
+      (layers): ModuleList(
+        (0): ConcatSquashLinear(
+          (_layer): Linear(in_features=3, out_features=128, bias=True)
+          (_hyper_bias): Linear(in_features=264, out_features=128, bias=False)
+          (_hyper_gate): Linear(in_features=264, out_features=128, bias=True)
+        )
+        (1): ConcatSquashLinear(
+          (_layer): Linear(in_features=128, out_features=256, bias=True)
+          (_hyper_bias): Linear(in_features=264, out_features=256, bias=False)
+          (_hyper_gate): Linear(in_features=264, out_features=256, bias=True)
+        )
+        (2): ConcatSquashLinear(
+          (_layer): Linear(in_features=256, out_features=512, bias=True)
+          (_hyper_bias): Linear(in_features=264, out_features=512, bias=False)
+          (_hyper_gate): Linear(in_features=264, out_features=512, bias=True)
+        )
+        (3): ConcatSquashLinear(
+          (_layer): Linear(in_features=512, out_features=256, bias=True)
+          (_hyper_bias): Linear(in_features=264, out_features=256, bias=False)
+          (_hyper_gate): Linear(in_features=264, out_features=256, bias=True)
+        )
+        (4): ConcatSquashLinear(
+          (_layer): Linear(in_features=256, out_features=128, bias=True)
+          (_hyper_bias): Linear(in_features=264, out_features=128, bias=False)
+          (_hyper_gate): Linear(in_features=264, out_features=128, bias=True)
+        )
+        (5): ConcatSquashLinear(
+          (_layer): Linear(in_features=128, out_features=3, bias=True)
+          (_hyper_bias): Linear(in_features=264, out_features=3, bias=False)
+          (_hyper_gate): Linear(in_features=264, out_features=3, bias=True)
+        )
+      )
+    )
+  )
+)
+[2024-07-25 11:04:31,866::test::INFO] Saving point clouds...
