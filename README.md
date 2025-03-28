@@ -1,4 +1,26 @@
-# Gen-Swarms: Adapting Deep Generative Models to Swarms of Drones
+
+<h1 align="center">Gen-Swarms: Adapting Deep Generative Models to Swarms of Drones</h1>
+
+<div align="center">
+    <img src="docs/img/FALCONEyeLogo.png" alt="Description" width="150">
+</div>
+
+
+ <div>
+    <a href="https://cplou99.github.io/web/" target="_blank">Carlos Plou*</a>,
+    <a href="https://sites.google.com/unizar.es/pablo-pueyo/inicio?authuser=1" target="_blank">Pablo Pueyo*</a>,
+    <a href="https://webdiis.unizar.es/~rmcantin/" target="_blank">Ruben Martinez-Cantin</a>,
+    <a href="https://web.stanford.edu/~schwager/" target="_blank">Mac Schwager</a>
+    <a href="https://sites.google.com/unizar.es/anac/home?authuser=0" target="_blank">Ana C. Murillo</a>
+    <a href="https://sites.google.com/unizar.es/eduardo-montijano" target="_blank">Eduardo Montijano</a>
+</div>
+
+
+<div>
+   <a href="https://longvideobench.github.io/"><strong>Homepage</strong></a> | <a href="https://huggingface.co/spaces/longvideobench/LongVideoBench"><strong>Poster</strong></a> |  <a href="https://arxiv.org/abs/2407.15754"><strong>ArXiv</strong></a>
+   </div>   
+
+
 
 ## Clone the repository and install dependencies
 
@@ -16,7 +38,7 @@ conda env create -f env.yml
 conda activate gen-swarms
 ```
 
-Install RVO2-3D Library which is an easy-to-use C++ implementation of the optimal reciprocal collision avoidance (ORCA)[https://gamma.cs.unc.edu/ORCA/] formulation
+Install RVO2-3D Library which is an easy-to-use C++ implementation of the optimal reciprocal collision avoidance [(ORCA)](https://gamma.cs.unc.edu/ORCA/) formulation
 ```bash
 git clone https://github.com/mtreml/Python-RVO2-3D
 cd Python-RVO2-3D
@@ -26,7 +48,7 @@ python setup.py install
 
 ## Dataset and checkpoints
 
-Dataset is available at (data folder)[https://drive.google.com/drive/folders/1Su0hCuGFo1AGrNb_VMNnlF7qeQwKjfhZ] of diffusion-point-cloud paper. Please, download and locate the `shapenet.hdf5` file inside the `data` folder of Gen-Swarms repository.
+Dataset is available at [data folder](https://drive.google.com/drive/folders/1Su0hCuGFo1AGrNb_VMNnlF7qeQwKjfhZ) of diffusion-point-cloud paper. Please, download and locate the `shapenet.hdf5` file inside the `data` folder of Gen-Swarms repository.
 
 Some checkpoints are located at `logs_gen` folder.
 
