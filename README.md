@@ -17,7 +17,7 @@
 
 
 <div align="center">
-   <a href="https://cplou99.github.io/Gen-Swarms/"><strong>Homepage</strong></a> | <a href="docs/ECCVWMAAS2024.png"><strong>Poster</strong></a> |  <a href="https://arxiv.org/abs/2408.15899"><strong>ArXiv</strong></a>
+   <a href="https://cplou99.github.io/Gen-Swarms/"><strong>🌍 Homepage</strong></a> | <a href="docs/ECCVWMAAS2024.png"><strong>📄 Poster</strong></a> |  <a href="https://arxiv.org/abs/2408.15899"><strong>📝 ArXiv</strong></a>
    </div>   
 
 
