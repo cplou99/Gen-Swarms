@@ -24,7 +24,7 @@
 
 ## Clone the repository and install dependencies
 
-Clone the repository.
+Clone Gen-Swarms repository which was built over the [Diffusion Probabilistic Models for 3D Point Cloud Generation](https://github.com/luost26/diffusion-point-cloud) work.
 ```bash
 git clone https://github.com/cplou99/Gen-Swarms
 ```
