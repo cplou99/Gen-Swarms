@@ -87,5 +87,4 @@ You may find some additional scripts inside `show` folder to visualize results.
   eprint={2408.15899},
   primaryClass={cs.RO}
 }
-
 ```
