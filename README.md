@@ -77,13 +77,15 @@ You may find some additional scripts inside `show` folder to visualize results.
 
 ## Citation
 ```
-@misc{plou2024genswarmsadaptingdeepgenerative,
-      title={Gen-Swarms: Adapting Deep Generative Models to Swarms of Drones}, 
-      author={Carlos Plou and Pablo Pueyo and Ruben Martinez-Cantin and Mac Schwager and Ana C. Murillo and Eduardo Montijano},
-      year={2024},
-      eprint={2408.15899},
-      archivePrefix={arXiv},
-      primaryClass={cs.RO},
-      url={https://arxiv.org/abs/2408.15899}, 
+@inproceedings{plou2024genswarmsadaptingdeepgenerative,
+  title={Gen-Swarms: Adapting Deep Generative Models to Swarms of Drones}, 
+  author={Carlos Plou and Pablo Pueyo and Ruben Martinez-Cantin and Mac Schwager and Ana C. Murillo and Eduardo Montijano},
+  booktitle={Proceedings of the European Conference on Computer Vision (ECCV) Workshops},
+  year={2024},
+  url={https://arxiv.org/abs/2408.15899},
+  archivePrefix={arXiv},
+  eprint={2408.15899},
+  primaryClass={cs.RO}
 }
+
 ```
