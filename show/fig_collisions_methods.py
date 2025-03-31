@@ -20,13 +20,13 @@ lim = 100
 threshold = 0.03 * 2 *1.1* 100 / 3
 
 # Load the data
-data_no_orca = np.load('../final_shapes/flow_no_orca/all_pcs.npy')
-data_orca = np.load('../final_shapes/flow_orca/all_pcs.npy')
-data_diff = np.load('../final_shapes/diffusion/all_pcs.npy')
-data_final_orca = np.load('../final_shapes/flow_final_orca/all_pcs.npy')
+data_no_orca = np.load('../results/flow_no_orca/all_pcs.npy')
+data_orca = np.load('../results/flow_orca/all_pcs.npy')
+data_diff = np.load('../results/diffusion/all_pcs.npy')
+data_final_orca = np.load('../results/flow_final_orca/all_pcs.npy')
 
-ref_flow = np.load('../final_shapes/flow_no_orca/refs.npy')
-ref_diff = np.load('../final_shapes/diffusion/refs.npy')
+ref_flow = np.load('../results/flow_no_orca/refs.npy')
+ref_diff = np.load('../results/diffusion/refs.npy')
 
 # Scale the data
 data_final_orca = data_final_orca * 100 / 3

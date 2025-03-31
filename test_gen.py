@@ -51,7 +51,7 @@ parser.add_argument('--batch_size', type=int, default=1)
 # Sampling
 parser.add_argument('--num_gen_samples', type=int, default=5)
 parser.add_argument('--sample_num_points', type=int, default=2048)
-parser.add_argument('--normalize', type=str, default=None, choices=[None, 'shape_unit', 'shape_bbox'])
+parser.add_argument('--normalize', type=str, default='shape_bbox', choices=[None, 'shape_unit', 'shape_bbox'])
 parser.add_argument('--seed', type=int, default=998)
 parser.add_argument('--orca_training', type=eval, default=False, choices=[True, False]) #new line
 parser.add_argument('--security_net', type=eval, default=False, choices=[True, False]) #new line
@@ -59,12 +59,12 @@ parser.add_argument('--security_distance_value', type=float, default=0.01) #new 
 parser.add_argument('--orca_sampling', type=eval, default=True, choices=[True, False]) #new line
 parser.add_argument('--real_scale', type=float, default=100) #new line
 
-parser.add_argument('--neighborDist', type=float, default=0.1) #new line
-parser.add_argument('--maxNeighbors', type=int, default=100) #new line
+parser.add_argument('--neighborDist', type=float, default=0.5) #new line
+parser.add_argument('--maxNeighbors', type=int, default=50) #new line
 parser.add_argument('--timeHorizon', type=float, default=0.05) #new line
 parser.add_argument('--radius', type=float, default=0.03) #new line
 parser.add_argument('--maxSpeed', type=float, default=6) #new line
-parser.add_argument('--num_steps', type=int, default=100) #new line
+parser.add_argument('--num_steps', type=int, default=50) #new line
 parser.add_argument('--transition', type=eval, default=False, choices=[True, False]) #new line
 parser.add_argument('--prior_distribution', type=str, default='normal', choices=['normal', 'uniform']) #new line
 args = parser.parse_args()
@@ -191,9 +191,9 @@ if args.normalize is not None:
 
 # gen_pcs = gen_pcs.squeeze(dim=1)
 print("Rescaling to real scale")
-all_pcs = all_pcs * args.real_scale/3
-gen_pcs = gen_pcs * args.real_scale/3
-ref_pcs = ref_pcs * args.real_scale/3
+all_pcs = all_pcs * args.real_scale 
+gen_pcs = gen_pcs * args.real_scale 
+ref_pcs = ref_pcs * args.real_scale 
 
 
 # Save

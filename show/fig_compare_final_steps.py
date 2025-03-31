@@ -7,10 +7,10 @@ sample = 2  # Fixed sample index
 lim = 100
 
 # Load the data
-data_no_orca = np.load('../final_shapes/flow_orca_5/all_pcs.npy')
-data_orca = np.load('../final_shapes/flow_orca_10/all_pcs.npy')
-data_diff = np.load('../final_shapes/flow_orca_25/all_pcs.npy')
-data_final_orca = np.load('../final_shapes/flow_orca/all_pcs.npy')
+data_no_orca = np.load('../results/flow_orca_5/all_pcs.npy')
+data_orca = np.load('../results/flow_orca_10/all_pcs.npy')
+data_diff = np.load('../results/flow_orca_25/all_pcs.npy')
+data_final_orca = np.load('../results/flow_orca/all_pcs.npy')
 
 # Define the datasets to plot
 datasets = [data_no_orca, data_orca, data_diff, data_final_orca]

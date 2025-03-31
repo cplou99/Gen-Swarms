@@ -2,7 +2,7 @@ import plotly.graph_objs as go
 import numpy as np
 
 # Load your trajectory data
-trajectory = np.load('../final_shapes/flow_no_orca/all_pcs.npy')[2]
+trajectory = np.load('../results/GEN_airplane/all_pcs.npy')[2]
 
 # Define the number of frames and the number of points
 num_frames = trajectory.shape[0]

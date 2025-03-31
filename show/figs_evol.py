@@ -6,8 +6,7 @@ from matplotlib.ticker import MaxNLocator
 import time
 
 %matplotlib qt
-data = np.load('../final_shapes/flow_orca/all_pcs.npy')
-#data = np.load('/home/pablo/Desktop/python/diffusion-master/flow/final_shapes/diffusion/out.npy')
+data = np.load('../results/flow_orca/all_pcs.npy')
 sample = 20
 
 data_size = data.shape

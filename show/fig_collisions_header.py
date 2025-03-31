@@ -21,13 +21,7 @@ lim = 100
 threshold = 0.03 * 2 * 1 * 100 / 3
 
 # Load the data
-data_orca = np.load('../final_shapes/flow_orca/all_pcs.npy')
-
-# Scale the data (if needed for this specific dataset)
-#data_orca = data_orca * 100 / 3
-
-# Use data_orca for plotting
-dataset = data_orca
+dataset = np.load('../results/flow_orca/all_pcs.npy')
 title = 'Gen-Swarms'
 
 # Create a 3D plot for the specific dataset

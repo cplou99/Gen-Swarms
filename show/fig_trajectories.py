@@ -43,10 +43,10 @@ def plot_all(data, lim, title=""):
     plt.show()
     
 # Load the data
-data_no_orca = np.load('../final_shapes/flow_no_orca/all_pcs.npy')
-data_orca = np.load('../final_shapes/flow_orca/all_pcs.npy')
-data_diff = np.load('../final_shapes/diffusion/all_pcs.npy')
-data_final_orca = np.load('../final_shapes/flow_final_orca/all_pcs.npy')
+data_no_orca = np.load('../results/flow_no_orca/all_pcs.npy')
+data_orca = np.load('../results/flow_orca/all_pcs.npy')
+data_diff = np.load('../results/diffusion/all_pcs.npy')
+data_final_orca = np.load('../results/flow_final_orca/all_pcs.npy')
 data_final_orca = data_final_orca * 100 / 3
 
 # Define the datasets to plot
