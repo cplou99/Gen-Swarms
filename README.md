@@ -17,14 +17,14 @@
 
 
 <div align="center">
-   <a href="https://longvideobench.github.io/"><strong>Homepage</strong></a> | <a href="docs/ECCVWMAAS2024.png"><strong>Poster</strong></a> |  <a href="https://arxiv.org/abs/2408.15899"><strong>ArXiv</strong></a>
+   <a href="https://cplou99.github.io/Gen-Swarms/"><strong>🌍 Homepage</strong></a> | <a href="docs/ECCVWMAAS2024.png"><strong>📄 Poster</strong></a> |  <a href="https://arxiv.org/abs/2408.15899"><strong>📝 ArXiv</strong></a>
    </div>   
 
 
 
 ## Clone the repository and install dependencies
 
-Clone the repository.
+Clone Gen-Swarms repository which was built over the [Diffusion Probabilistic Models for 3D Point Cloud Generation](https://github.com/luost26/diffusion-point-cloud) work.
 ```bash
 git clone https://github.com/cplou99/Gen-Swarms
 ```
@@ -72,18 +72,19 @@ To generate some pointclouds with their trajectories from a trained model, pleas
 python test_gen.py --ckpt ./logs_gen/gen-swarms_airplane.pt --categories airplane --num_gen_samples 10
 ```
 
-Results will be saved at `results` folder. If you want to replicate the results of the paper, please run with `--num_gen_samples None`.
+Results will be saved at `results` folder. If you want to replicate the results of the paper, please set `--num_gen_samples None` to generate 607 samples.
 You may find some additional scripts inside `show` folder to visualize results.
 
 ## Citation
 ```
-@misc{plou2024genswarmsadaptingdeepgenerative,
-      title={Gen-Swarms: Adapting Deep Generative Models to Swarms of Drones}, 
-      author={Carlos Plou and Pablo Pueyo and Ruben Martinez-Cantin and Mac Schwager and Ana C. Murillo and Eduardo Montijano},
-      year={2024},
-      eprint={2408.15899},
-      archivePrefix={arXiv},
-      primaryClass={cs.RO},
-      url={https://arxiv.org/abs/2408.15899}, 
+@inproceedings{plou2024genswarmsadaptingdeepgenerative,
+  title={Gen-Swarms: Adapting Deep Generative Models to Swarms of Drones}, 
+  author={Carlos Plou and Pablo Pueyo and Ruben Martinez-Cantin and Mac Schwager and Ana C. Murillo and Eduardo Montijano},
+  booktitle={Proceedings of the European Conference on Computer Vision (ECCV) Workshops},
+  year={2024},
+  url={https://arxiv.org/abs/2408.15899},
+  archivePrefix={arXiv},
+  eprint={2408.15899},
+  primaryClass={cs.RO}
 }
 ```
